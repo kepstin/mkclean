@@ -1,0 +1,102 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" (C) Copyright 2013 Calvin Walton <calvin.walton@kepstin.ca>
+.\"
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH MKCLEAN 1 2013-06-27
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+mkclean \- tool to clean and optimize Matroska and WebM files
+.SH SYNOPSIS
+.B mkclean
+.RI [ options ] " srcxfile " [ "dest_file" ]
+.SH DESCRIPTION
+.B mkclean
+is a command line tool tool to clean and optimize Matroska (.mkv / .mka / .mks
+/ .mk3d) and WebM (.webm / .weba) files that have already been muxed.
+It reorders the elements with the Cues at the front, so your Matroska files are
+ready to be streamed efficiently over the web.
+It also removes elements not found in the Matroska specs and the extra Meta
+Seek list of Clusters that some program add to their file.
+It can also optionally remux the Cluster blocks to start each boundary with a
+keyframe and the matching audio/subtitle blocks for that keyframe.
+.SH OPTIONS
+These programs follow the usual GNU command line syntax, with long
+options starting with two dashes (`-').
+A summary of options is included below.
+.TP
+.B \-\-keep\-cues
+keep the original Cues content and move it to the front
+.TP
+.BI \-\-doctype " v"
+force the doctype version
+.RS
+.TP
+.I 1
+"matroska" v1
+.TP
+.I 2
+"matroska" v2
+.TP
+.I 3
+"matroska" v3
+.TP
+.I 4
+"webm"
+.TP
+.I 5
+"matroska" v1 with DivX extensions
+.RE
+.TP
+.B \-\-live
+the output file resembles a live stream
+.TP
+.BI \-\-timecodescale " v"
+force the global TimecodeScale to
+.I v
+(1000000 is a good value)
+.TP
+.B \-\-unsafe
+don't output elements that are used for file recovery
+(saves more space)
+.TP
+.B \-\-optimize
+use all possible optimization for the output file
+.TP
+.B \-\-optimize_nv
+use all possible optimization for the output file, except video tracks
+.TP
+.B \-\-no\-optimize
+disable some optimization for the output file
+.TP
+.B \-\-no\-optimize
+disable some optimization for the output file
+.TP
+.B \-\-regression
+the output file is suitable for regression tests
+.TP
+.BI \-\-alt\-3d " t"
+the track with ID
+.I v
+has alternate 3D fields (left first)
+.TP
+.B \-\-quiet
+only output errors
+.TP
+.B \-\-help
+Show summary of options.
+.TP
+.B \-\-version
+Show version of program.

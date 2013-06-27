@@ -1,0 +1,5 @@
+mkclean (0.8.7-1bn1) UNRELEASED; urgency=low
+
+  * Initial packaging
+
+ -- Calvin Walton <calvin.walton@kepstin.ca>  Thu, 27 Jun 2013 12:24:45 -0400
