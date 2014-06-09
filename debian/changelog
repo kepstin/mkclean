@@ -1,4 +1,4 @@
-mkclean (0.8.7-1bn2) UNRELEASED; urgency=low
+mkclean (0.8.7-1bn2) stable; urgency=low
 
   * Allow using older debhelper version
   * Reduce the debian compat level
