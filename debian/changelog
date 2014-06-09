@@ -1,4 +1,11 @@
-mkclean (0.8.7-1bn1) UNRELEASED; urgency=low
+mkclean (0.8.7-1bn2) UNRELEASED; urgency=low
+
+  * Allow using older debhelper version
+  * Reduce the debian compat level
+
+ -- Calvin Walton <calvin.walton@kepstin.ca>  Mon, 09 Jun 2014 16:42:27 +0000
+
+mkclean (0.8.7-1bn1) stable; urgency=low
 
   * Initial packaging
 
