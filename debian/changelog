@@ -1,5 +1,5 @@
-mkclean (0.8.7-1bn1) UNRELEASED; urgency=low
+mkclean (0.8.7-1) UNRELEASED; urgency=low
 
-  * Initial packaging
+  * Initial packaging for BigBlueButton
 
  -- Calvin Walton <calvin.walton@kepstin.ca>  Thu, 27 Jun 2013 12:24:45 -0400
