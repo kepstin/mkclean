@@ -1,0 +1,91 @@
+properties([
+    parameters([
+        booleanParam(
+                defaultValue: false,
+                description: 'Do a Release Build',
+                name: 'SKIP_DCH')
+    ]),
+    gitLabConnection('gitlab.ottawa.blindsidenetworks.com')
+])
+
+stage('source') {
+    node {
+        dir('source') {
+            scmVars = checkout scm
+            env.GIT_COMMIT = scmVars.GIT_COMMIT
+            env.GIT_BRANCH = scmVars.GIT_BRANCH
+            env.GIT_LOCAL_BRANCH = scmVars.GIT_LOCAL_BRANCH
+            env.GIT_URL = scmVars.GIT_URL
+        }
+	echo sh(returnStdout: true, script: 'env')
+        sh('/usr/bin/generate-git-snapshot')
+
+        currentBuild.displayName = sh(returnStdout: true, script: "#!/bin/bash\nawk '/^Version/ {print \$2 ; exit}' < *.dsc")
+
+        fingerprint('*.gz,*.bz2,*.xz,*.deb,*.ddeb,*.dsc,*.changes,*.buildinfo')
+        stash(includes: '*.gz,*.bz2,*.xz,*.deb,*.ddeb,*.dsc,*.changes,*.buildinfo', name: 'source')
+    }
+}
+
+stage('binaries') {
+    node {
+        gitlabCommitStatus('build') {
+            unstash('source')
+            withEnv([
+                    'REPOS=mkclean',
+                    'BUILD_ONLY=true',
+                    "distribution=${env.GIT_BRANCH}"
+            ]) {
+                sh('/usr/bin/build-and-provide-package')
+            }
+            fingerprint('*.gz,*.bz2,*.xz,*.deb,*.ddeb,*.dsc,*.changes,*.buildinfo')
+            archiveArtifacts('*.gz,*.bz2,*.xz,*.deb,*.ddeb,*.dsc,*.changes,*.buildinfo')
+            stash(includes: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.ddeb,*.changes,*.buildinfo', name: 'binaries')
+        }
+    }
+}
+
+stage('repos') {
+    milestone()
+    node('apt-server') {
+        dir('binaries') {
+            unstash('binaries')
+        }
+        withEnv([
+                'REPOS=mkclean',
+                'PROVIDE_ONLY=true',
+                'TRUNK_RELEASE=bn-internal',
+                'REMOVE_FROM_RELEASE=true',
+                'ORIGIN=BlindsideNetworks',
+                "distribution=${env.GIT_BRANCH}"
+        ]) {
+            sh('/usr/bin/build-and-provide-package')
+        }
+    }
+}
+
+if (env.SKIP_DCH == 'true') {
+    stage('external-repos') {
+        timeout(time: 1, unit: 'DAYS') {
+            input('Push release to external repo?')
+        }
+        milestone()
+        //currentBuild.rawBuild.keepLog(true)
+        node('apt-server') {
+            dir('binaries') {
+                unstash('binaries')
+            }
+            withEnv([
+                    "REPOS=${env.GIT_BRANCH}",
+                    'PROVIDE_ONLY=true',
+                    'USE_FREIGHT=true',
+                    'FREIGHT_BASE=/srv/repository/freight',
+                    'FREIGHT_REPOSITORY=bn-internal',
+                    "distribution=${env.GIT_BRANCH}"
+            ]) {
+                sh('/usr/bin/build-and-provide-package')
+            }
+        }
+        build('apt-repos-rsync')
+    }
+}

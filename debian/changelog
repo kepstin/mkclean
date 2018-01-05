@@ -1,3 +1,9 @@
+mkclean (0.8.7-1bn3) UNRELEASED; urgency=medium
+
+  * New packaging for artful
+
+ -- Calvin Walton <calvin.walton@kepstin.ca>  Fri, 05 Jan 2018 15:33:59 -0500
+
 mkclean (0.8.7-1bn2) stable; urgency=low
 
   * Allow using older debhelper version
