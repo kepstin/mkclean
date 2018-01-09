@@ -1,8 +1,8 @@
-mkclean (0.8.7-1bn3) UNRELEASED; urgency=medium
+mkclean (0.8.7-1bn3) xenial; urgency=medium
 
   * New packaging for artful
 
- -- Calvin Walton <calvin.walton@kepstin.ca>  Fri, 05 Jan 2018 15:33:59 -0500
+ -- Calvin Walton <cwalton@trusty-vm>  Tue, 09 Jan 2018 14:09:15 -0500
 
 mkclean (0.8.7-1bn2) stable; urgency=low
 
