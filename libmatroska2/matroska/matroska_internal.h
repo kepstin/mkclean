@@ -1,5 +1,5 @@
 /*
- * $Id: matroska_internal.h 830 2012-05-12 15:44:37Z robux4 $
+ * $Id$
  * Copyright (c) 2010-2011, Matroska (non-profit organisation)
  * All rights reserved.
  *

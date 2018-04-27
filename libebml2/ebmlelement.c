@@ -1,5 +1,5 @@
 /*
- * $Id: ebmlelement.c 642 2010-11-28 08:38:47Z robux4 $
+ * $Id$
  * Copyright (c) 2008-2010, Matroska (non-profit organisation)
  * All rights reserved.
  *
@@ -30,7 +30,7 @@
 
 static bool_t ValidateSize(const ebml_element *p)
 {
-    return 1;
+    return EBML_ElementIsFiniteSize(p); /* not allowed outside of master elements */
 }
 
 static void PostCreate(ebml_element *Element, bool_t SetDefault)
@@ -38,6 +38,7 @@ static void PostCreate(ebml_element *Element, bool_t SetDefault)
     Element->DefaultSize = -1;
     Element->ElementPosition = INVALID_FILEPOS_T;
     Element->SizePosition = INVALID_FILEPOS_T;
+    Element->EndPosition = INVALID_FILEPOS_T;
 }
 
 static bool_t NeedsDataSizeUpdate(ebml_element *Element, bool_t bWithDefault)
@@ -192,10 +193,7 @@ filepos_t EBML_ElementPositionData(const ebml_element *Element)
 
 filepos_t EBML_ElementPositionEnd(const ebml_element *Element)
 {
-    if (!EBML_ElementIsFiniteSize(Element))
-        return INVALID_FILEPOS_T; // the end position is unknown
-    else
-        return Element->SizePosition + EBML_CodedSizeLength(Element->DataSize,Element->SizeLength,1) + Element->DataSize;
+    return Element->EndPosition;
 }
 
 bool_t EBML_ElementInfiniteForceSize(ebml_element *Element, filepos_t NewSize)
@@ -258,6 +256,8 @@ size_t EBML_IdToString(tchar_t *Out, size_t OutLen, fourcc_t Id)
 
 fourcc_t EBML_BufferToID(const uint8_t *Buffer)
 {
+    if (Buffer == NULL)
+        return 0;
 	if (Buffer[0] & 0x80)
 		return (fourcc_t)Buffer[0];
 	if (Buffer[0] & 0x40)
@@ -333,6 +333,7 @@ err_t EBML_ElementRenderHead(ebml_element *Element, stream *Output, bool_t bKeep
 	if (!bKeepPosition) {
 		Element->ElementPosition = PosAfter - FinalHeadSize;
 		Element->SizePosition = Element->ElementPosition + GetIdLength(Element->Context->Id);
+        Element->EndPosition = Element->SizePosition + CodedSize + Element->DataSize;
 	}
     if (Rendered)
         *Rendered = PosAfter - PosBefore;

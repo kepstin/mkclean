@@ -1,5 +1,5 @@
 /*
- * $Id: ebmlstring.c 642 2010-11-28 08:38:47Z robux4 $
+ * $Id$
  * Copyright (c) 2008-2010, Matroska (non-profit organisation)
  * All rights reserved.
  *
@@ -72,7 +72,7 @@ void EBML_StringGet(ebml_string *Element,tchar_t *Out, size_t OutLen)
 static err_t ReadData(ebml_string *Element, stream *Input, const ebml_parser_context *ParserContext, bool_t AllowDummyElt, int Scope, size_t DepthCheckCRC)
 {
     err_t Result;
-    char *Buffer;
+    char *Buffer = NULL;
 
     Element->Base.bValueIsSet = 0;
 
@@ -208,6 +208,7 @@ static ebml_string *Copy(const ebml_string *Element, const void *Cookie)
         Result->Base.ElementPosition = Element->Base.ElementPosition;
         Result->Base.SizeLength = Element->Base.SizeLength;
         Result->Base.SizePosition = Element->Base.SizePosition;
+        Result->Base.EndPosition = Element->Base.EndPosition;
         Result->Base.bNeedDataSizeUpdate = Element->Base.bNeedDataSizeUpdate;
     }
     return Result;

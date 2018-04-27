@@ -1,8 +1,9 @@
 /*
  * DO NOT EDIT, GENERATED WITH DATA2LIB2
+ * https://github.com/Matroska-Org/foundation-source/tree/master/spectool
  *
- * $Id: matroska_sem.h 696 2011-03-13 13:42:25Z robux4 $
- * Copyright (c) 2008-2011, Matroska (non-profit organisation)
+ * $Id$
+ * Copyright (c) 2008-2017, Matroska (non-profit organisation)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -79,6 +80,7 @@ extern const ebml_context MATROSKA_ContextReferencePriority;
 extern const ebml_context MATROSKA_ContextReferenceBlock;
 extern const ebml_context MATROSKA_ContextReferenceVirtual;
 extern const ebml_context MATROSKA_ContextCodecState;
+extern const ebml_context MATROSKA_ContextDiscardPadding;
 extern const ebml_context MATROSKA_ContextLaceNumber;
 extern const ebml_context MATROSKA_ContextFrameNumber;
 extern const ebml_context MATROSKA_ContextBlockAdditionID;
@@ -107,11 +109,13 @@ extern const ebml_context MATROSKA_ContextFlagLacing;
 extern const ebml_context MATROSKA_ContextMinCache;
 extern const ebml_context MATROSKA_ContextMaxCache;
 extern const ebml_context MATROSKA_ContextDefaultDuration;
+extern const ebml_context MATROSKA_ContextDefaultDecodedFieldDuration;
 extern const ebml_context MATROSKA_ContextTrackTimecodeScale;
 extern const ebml_context MATROSKA_ContextTrackOffset;
 extern const ebml_context MATROSKA_ContextMaxBlockAdditionID;
 extern const ebml_context MATROSKA_ContextName;
 extern const ebml_context MATROSKA_ContextLanguage;
+extern const ebml_context MATROSKA_ContextLanguageIETF;
 extern const ebml_context MATROSKA_ContextCodecID;
 extern const ebml_context MATROSKA_ContextCodecPrivate;
 extern const ebml_context MATROSKA_ContextCodecName;
@@ -121,13 +125,17 @@ extern const ebml_context MATROSKA_ContextCodecInfoURL;
 extern const ebml_context MATROSKA_ContextCodecDownloadURL;
 extern const ebml_context MATROSKA_ContextCodecDecodeAll;
 extern const ebml_context MATROSKA_ContextTrackOverlay;
+extern const ebml_context MATROSKA_ContextCodecDelay;
+extern const ebml_context MATROSKA_ContextSeekPreRoll;
 extern const ebml_context MATROSKA_ContextTrackTranslateEditionUID;
 extern const ebml_context MATROSKA_ContextTrackTranslateCodec;
 extern const ebml_context MATROSKA_ContextTrackTranslateTrackID;
 extern const ebml_context MATROSKA_ContextTrackTranslate;
 
 extern const ebml_context MATROSKA_ContextFlagInterlaced;
+extern const ebml_context MATROSKA_ContextFieldOrder;
 extern const ebml_context MATROSKA_ContextStereoMode;
+extern const ebml_context MATROSKA_ContextAlphaMode;
 extern const ebml_context MATROSKA_ContextOldStereoMode;
 extern const ebml_context MATROSKA_ContextPixelWidth;
 extern const ebml_context MATROSKA_ContextPixelHeight;
@@ -142,6 +150,40 @@ extern const ebml_context MATROSKA_ContextAspectRatioType;
 extern const ebml_context MATROSKA_ContextColourSpace;
 extern const ebml_context MATROSKA_ContextGammaValue;
 extern const ebml_context MATROSKA_ContextFrameRate;
+extern const ebml_context MATROSKA_ContextMatrixCoefficients;
+extern const ebml_context MATROSKA_ContextBitsPerChannel;
+extern const ebml_context MATROSKA_ContextChromaSubsamplingHorz;
+extern const ebml_context MATROSKA_ContextChromaSubsamplingVert;
+extern const ebml_context MATROSKA_ContextCbSubsamplingHorz;
+extern const ebml_context MATROSKA_ContextCbSubsamplingVert;
+extern const ebml_context MATROSKA_ContextChromaSitingHorz;
+extern const ebml_context MATROSKA_ContextChromaSitingVert;
+extern const ebml_context MATROSKA_ContextRange;
+extern const ebml_context MATROSKA_ContextTransferCharacteristics;
+extern const ebml_context MATROSKA_ContextPrimaries;
+extern const ebml_context MATROSKA_ContextMaxCLL;
+extern const ebml_context MATROSKA_ContextMaxFALL;
+extern const ebml_context MATROSKA_ContextPrimaryRChromaticityX;
+extern const ebml_context MATROSKA_ContextPrimaryRChromaticityY;
+extern const ebml_context MATROSKA_ContextPrimaryGChromaticityX;
+extern const ebml_context MATROSKA_ContextPrimaryGChromaticityY;
+extern const ebml_context MATROSKA_ContextPrimaryBChromaticityX;
+extern const ebml_context MATROSKA_ContextPrimaryBChromaticityY;
+extern const ebml_context MATROSKA_ContextWhitePointChromaticityX;
+extern const ebml_context MATROSKA_ContextWhitePointChromaticityY;
+extern const ebml_context MATROSKA_ContextLuminanceMax;
+extern const ebml_context MATROSKA_ContextLuminanceMin;
+extern const ebml_context MATROSKA_ContextMasteringMetadata;
+
+extern const ebml_context MATROSKA_ContextColour;
+
+extern const ebml_context MATROSKA_ContextProjectionType;
+extern const ebml_context MATROSKA_ContextProjectionPrivate;
+extern const ebml_context MATROSKA_ContextProjectionPoseYaw;
+extern const ebml_context MATROSKA_ContextProjectionPosePitch;
+extern const ebml_context MATROSKA_ContextProjectionPoseRoll;
+extern const ebml_context MATROSKA_ContextProjection;
+
 extern const ebml_context MATROSKA_ContextVideo;
 
 extern const ebml_context MATROSKA_ContextSamplingFrequency;
@@ -193,6 +235,8 @@ extern const ebml_context MATROSKA_ContextTracks;
 extern const ebml_context MATROSKA_ContextCueTime;
 extern const ebml_context MATROSKA_ContextCueTrack;
 extern const ebml_context MATROSKA_ContextCueClusterPosition;
+extern const ebml_context MATROSKA_ContextCueRelativePosition;
+extern const ebml_context MATROSKA_ContextCueDuration;
 extern const ebml_context MATROSKA_ContextCueBlockNumber;
 extern const ebml_context MATROSKA_ContextCueCodecState;
 extern const ebml_context MATROSKA_ContextCueRefTime;
@@ -224,6 +268,7 @@ extern const ebml_context MATROSKA_ContextEditionFlagHidden;
 extern const ebml_context MATROSKA_ContextEditionFlagDefault;
 extern const ebml_context MATROSKA_ContextEditionFlagOrdered;
 extern const ebml_context MATROSKA_ContextChapterUID;
+extern const ebml_context MATROSKA_ContextChapterStringUID;
 extern const ebml_context MATROSKA_ContextChapterTimeStart;
 extern const ebml_context MATROSKA_ContextChapterTimeEnd;
 extern const ebml_context MATROSKA_ContextChapterFlagHidden;
@@ -236,6 +281,7 @@ extern const ebml_context MATROSKA_ContextChapterTrack;
 
 extern const ebml_context MATROSKA_ContextChapString;
 extern const ebml_context MATROSKA_ContextChapLanguage;
+extern const ebml_context MATROSKA_ContextChapLanguageIETF;
 extern const ebml_context MATROSKA_ContextChapCountry;
 extern const ebml_context MATROSKA_ContextChapterDisplay;
 
@@ -263,6 +309,7 @@ extern const ebml_context MATROSKA_ContextTargets;
 
 extern const ebml_context MATROSKA_ContextTagName;
 extern const ebml_context MATROSKA_ContextTagLanguage;
+extern const ebml_context MATROSKA_ContextTagLanguageIETF;
 extern const ebml_context MATROSKA_ContextTagDefault;
 extern const ebml_context MATROSKA_ContextTagString;
 extern const ebml_context MATROSKA_ContextTagBinary;

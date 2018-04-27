@@ -1,5 +1,5 @@
 /*
- * $Id: ebml.h 775 2011-07-03 08:27:03Z robux4 $
+ * $Id$
  * Copyright (c) 2008-2010, Matroska (non-profit organisation)
  * All rights reserved.
  *

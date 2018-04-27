@@ -1,5 +1,5 @@
 /*
- * $Id: mkclean.c 834 2012-08-26 12:17:29Z robux4 $
+ * $Id$
  * Copyright (c) 2010-2011, Matroska (non-profit organisation)
  * All rights reserved.
  *
@@ -142,7 +142,7 @@ typedef struct track_info
 
 static const tchar_t *GetProfileName(size_t ProfileNum)
 {
-static const tchar_t *Profile[7] = {T("unknown"), T("matroska v1"), T("matroska v2"), T("matroska v3"), T("webm"), T("matroska+DivX")};
+static const tchar_t *Profile[7] = {T("unknown"), T("matroska v1"), T("matroska v2"), T("matroska v3"), T("webm"), T("matroska+DivX"), T("matroska v4")};
 	switch (ProfileNum)
 	{
 	default:                  return Profile[0];
@@ -151,6 +151,7 @@ static const tchar_t *Profile[7] = {T("unknown"), T("matroska v1"), T("matroska 
 	case PROFILE_MATROSKA_V3: return Profile[3];
 	case PROFILE_WEBM:        return Profile[4];
 	case PROFILE_DIVX:        return Profile[5];
+	case PROFILE_MATROSKA_V4: return Profile[6];
 	}
 }
 
@@ -164,6 +165,7 @@ static int GetProfileId(int Profile)
 	case PROFILE_MATROSKA_V3: return 3;
 	case PROFILE_WEBM:        return 4;
 	case PROFILE_DIVX:        return 5;
+	case PROFILE_MATROSKA_V4: return 6;
 	}
 }
 
@@ -1221,18 +1223,22 @@ static int CleanTracks(ebml_master *Tracks, int SrcProfile, int *DstProfile, ebm
             EBML_IntegerSetValue((ebml_integer*)Elt2, TRACK_STEREO_MODE_ALTERNATE_PACKED_L);
         }
 
-		if (*DstProfile==PROFILE_WEBM)
-		{
-	        // verify that we have only VP8 and Vorbis tracks
-			Elt = EBML_MasterFindChild(CurTrack,&MATROSKA_ContextCodecID);
-			EBML_StringGet((ebml_string*)Elt,CodecID,TSIZEOF(CodecID));
-			if (!(TrackType==TRACK_TYPE_VIDEO && tcsisame_ascii(CodecID,T("V_VP8")) || (TrackType==TRACK_TYPE_AUDIO && tcsisame_ascii(CodecID,T("A_VORBIS")))))
-			{
-				TextPrintf(StdErr,T("Wrong codec '%s' for profile '%s' removing track %d\r\n"),CodecID,GetProfileName(*DstProfile),TrackNum);
-				NodeDelete((node*)CurTrack);
+        if (*DstProfile==PROFILE_WEBM)
+        {
+            // verify that we have only VP8, VP9, Opus and Vorbis tracks
+            Elt = EBML_MasterFindChild(CurTrack,&MATROSKA_ContextCodecID);
+            EBML_StringGet((ebml_string*)Elt,CodecID,TSIZEOF(CodecID));
+            if (!((TrackType==TRACK_TYPE_VIDEO && tcsisame_ascii(CodecID,T("V_VP8"))) ||
+                  (TrackType==TRACK_TYPE_VIDEO && tcsisame_ascii(CodecID,T("V_VP9"))) ||
+                  (TrackType==TRACK_TYPE_AUDIO && tcsisame_ascii(CodecID,T("A_VORBIS"))) ||
+                  (TrackType==TRACK_TYPE_AUDIO && tcsisame_ascii(CodecID,T("A_OPUS")))
+                ))
+            {
+                TextPrintf(StdErr,T("Wrong codec '%s' for profile '%s' removing track %d\r\n"),CodecID,GetProfileName(*DstProfile),TrackNum);
+                NodeDelete((node*)CurTrack);
                 continue;
-			}
-		}
+            }
+        }
 
         // clean the output sampling freq
         Elt = EBML_MasterFindChild(CurTrack,&MATROSKA_ContextAudio);
@@ -1492,6 +1498,8 @@ int main(int argc, const char *argv[])
 				DstProfile = PROFILE_WEBM;
 			else if (tcsisame_ascii(Path,T("5")))
 				DstProfile = PROFILE_DIVX;
+			else if (tcsisame_ascii(Path,T("6")))
+				DstProfile = PROFILE_MATROSKA_V4;
 			else
 			{
 		        TextPrintf(StdErr,T("Unknown doctype %s\r\n"),Path);
@@ -1637,6 +1645,8 @@ int main(int argc, const char *argv[])
         SrcProfile = PROFILE_MATROSKA_V2;
     else if (SrcProfile==PROFILE_MATROSKA_V1 && DocVersion==3)
         SrcProfile = PROFILE_MATROSKA_V3;
+    else if (SrcProfile==PROFILE_MATROSKA_V1 && DocVersion==4)
+        SrcProfile = PROFILE_MATROSKA_V4;
 
 	if (!DstProfile)
 		DstProfile = SrcProfile;
@@ -1863,8 +1873,10 @@ int main(int argc, const char *argv[])
 		DocVersion=2;
 	if (DstProfile==PROFILE_MATROSKA_V3)
 		DocVersion=3;
+	if (DstProfile==PROFILE_MATROSKA_V4)
+		DocVersion=4;
 
-    if (ARRAYCOUNT(Alternate3DTracks, block_info*) && DstProfile!=PROFILE_MATROSKA_V3)
+    if (ARRAYCOUNT(Alternate3DTracks, block_info*) && DstProfile!=PROFILE_MATROSKA_V3 && DstProfile!=PROFILE_MATROSKA_V4)
     {
         TextPrintf(StdErr,T("Using --alt-3d in profile '%s' try \"--doctype %d\"\r\n"),GetProfileName(DstProfile),GetProfileId(PROFILE_MATROSKA_V3));
         goto exit;

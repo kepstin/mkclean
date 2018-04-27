@@ -1,5 +1,5 @@
 /*
- * $Id: matroskablock.c 728 2011-04-02 15:06:52Z robux4 $
+ * $Id$
  * Copyright (c) 2010-2011, Matroska (non-profit organisation)
  * All rights reserved.
  *

@@ -1,5 +1,5 @@
 /*
- * $Id: mkcleanreg.c 834 2012-08-26 12:17:29Z robux4 $
+ * $Id$
  * Copyright (c) 2010, Matroska (non-profit organisation)
  * All rights reserved.
  *

@@ -1,5 +1,5 @@
 /*
- * $Id: ebmltree.c 642 2010-11-28 08:38:47Z robux4 $
+ * $Id$
  * Copyright (c) 2008-2010, Matroska Foundation
  * All rights reserved.
  *
