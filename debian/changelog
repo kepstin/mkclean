@@ -1,3 +1,10 @@
+mkclean (0.8.10-1bn1) UNRELEASED; urgency=medium
+
+  * Mark as released
+  * Imported Upstream version 0.8.10
+
+ -- Calvin Walton <calvin.walton@blindsidenetworks.com>  Fri, 27 Apr 2018 13:05:09 -0400
+
 mkclean (0.8.7-1bn3) xenial; urgency=medium
 
   * New packaging for artful
