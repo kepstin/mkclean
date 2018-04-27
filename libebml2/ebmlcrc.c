@@ -1,5 +1,5 @@
 /*
- * $Id: ebmlcrc.c 642 2010-11-28 08:38:47Z robux4 $
+ * $Id$
  * Copyright (c) 2008-2010, Matroska (non-profit organisation)
  * All rights reserved.
  *
@@ -198,6 +198,7 @@ static ebml_crc *Copy(const ebml_crc *Element, const void *Cookie)
         Result->Base.ElementPosition = Element->Base.ElementPosition;
         Result->Base.SizeLength = Element->Base.SizeLength;
         Result->Base.SizePosition = Element->Base.SizePosition;
+        Result->Base.EndPosition = Element->Base.EndPosition;
         Result->Base.bNeedDataSizeUpdate = Element->Base.bNeedDataSizeUpdate;
     }
     return Result;

@@ -1,5 +1,5 @@
 /*
- * $Id: legacy.cpp 642 2010-11-28 08:38:47Z robux4 $
+ * $Id$
  * Copyright (c) 2010, Matroska (non-profit organisation)
  * All rights reserved.
  *

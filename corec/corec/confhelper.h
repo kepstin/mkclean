@@ -1,5 +1,5 @@
 /*
-  $Id: confhelper.h 777 2011-07-03 09:13:25Z robux4 $
+  $Id$
 
   Copyright (c) 2010, CoreCodec, Inc.
   All rights reserved.

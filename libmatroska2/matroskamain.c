@@ -1,5 +1,5 @@
 /*
- * $Id: matroskamain.c 830 2012-05-12 15:44:37Z robux4 $
+ * $Id$
  * Copyright (c) 2008-2011, Matroska (non-profit organisation)
  * All rights reserved.
  *
@@ -329,11 +329,15 @@ err_t MATROSKA_LinkMetaSeekElement(matroska_seekpoint *MetaSeek, ebml_element *L
 fourcc_t MATROSKA_MetaSeekID(const matroska_seekpoint *MetaSeek)
 {
 	ebml_element *SeekID;
+    const uint8_t *IDdata;
     assert(EBML_ElementIsType((ebml_element*)MetaSeek, &MATROSKA_ContextSeek));
     SeekID = EBML_MasterFindChild((ebml_master*)MetaSeek, &MATROSKA_ContextSeekID);
 	if (!SeekID)
 		return 0;
-	return EBML_BufferToID(EBML_BinaryGetData((ebml_binary*)SeekID));
+    IDdata = EBML_BinaryGetData((ebml_binary*)SeekID);
+    if (IDdata == NULL)
+        return 0;
+	return EBML_BufferToID(IDdata);
 }
 
 bool_t MATROSKA_MetaSeekIsClass(const matroska_seekpoint *MetaSeek, const ebml_context *Class)
@@ -1557,7 +1561,7 @@ err_t UnCompressFrameZLib(const uint8_t *Cursor, size_t CursorSize, array *OutBu
     else
     {
         size_t Count;
-        stream.next_in = Cursor;
+        stream.next_in = (Bytef*)Cursor;
         stream.avail_in = CursorSize;
         stream.next_out = ARRAYBEGIN(*OutBuf,uint8_t) + *ArrayOffset;
         do {

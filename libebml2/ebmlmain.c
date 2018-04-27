@@ -1,5 +1,5 @@
 /*
- * $Id: ebmlmain.c 836 2012-08-26 13:06:04Z robux4 $
+ * $Id$
  * Copyright (c) 2008-2010, Matroska (non-profit organisation)
  * All rights reserved.
  *
@@ -398,6 +398,7 @@ printf("Elt: size %d id %d %02X\n",SizeFound,PossibleID_Length,PossibleId[0]);
     }
     Result->ElementPosition = aElementPosition;
     Result->SizePosition = aSizePosition;
+    Result->EndPosition = aSizePosition + _SizeLength + SizeFound;
 
     return Result;
 }
@@ -576,6 +577,8 @@ ebml_element *EBML_FindNextElement(stream *Input, const ebml_parser_context *pCo
 			}
 			if (PossibleSizeLength >= 8)
 				break;
+            if (PossibleSizeLength > 0 && PossibleIdNSize[PossibleID_Length] == 0)
+                break; // invalid all zero size
             if (Context->EndPosition == StartPos+ReadSize)
                 break; // we should not read further than our limit
             if (Stream_ReadOneOrMore(Input,&PossibleIdNSize[SizeIdx++], 1, NULL)!=ERR_NONE)
@@ -614,6 +617,8 @@ ebml_element *EBML_FindNextElement(stream *Input, const ebml_parser_context *pCo
                     assert(_SizeLength <= 8);
                     Result->SizeLength = (int8_t)_SizeLength;
 					Result->DataSize = SizeFound;
+                    Result->EndPosition = (SizeFound == SizeUnknown) ? Context->EndPosition : CurrentPos - SizeIdx + PossibleID_Length + _SizeLength + SizeFound;
+                    EBML_ElementSetInfiniteSize(Result, SizeFound == SizeUnknown);
 
 					if (AllowDummyElt && !EBML_ElementValidateSize(Result) && !EBML_ElementIsDummy(Result))
 					{
@@ -622,6 +627,8 @@ ebml_element *EBML_FindNextElement(stream *Input, const ebml_parser_context *pCo
 						Result = CreateElement(Input, PossibleIdNSize, PossibleID_Length, &EBML_ContextDummy, NULL);
 						Result->SizeLength = (int8_t)_SizeLength;
 						Result->DataSize = SizeFound;
+                        Result->EndPosition = (SizeFound == SizeUnknown) ? Context->EndPosition : CurrentPos - SizeIdx + PossibleID_Length + _SizeLength + SizeFound;
+                        EBML_ElementSetInfiniteSize(Result, SizeFound == SizeUnknown);
 					}
 
 					// LevelChange values
@@ -633,7 +640,6 @@ ebml_element *EBML_FindNextElement(stream *Input, const ebml_parser_context *pCo
                     {
 						if (SizeFound == SizeUnknown)
                         {
-                            EBML_ElementSetInfiniteSize(Result, 1);
                             Result->DataSize = INVALID_FILEPOS_T;
                         }
 
@@ -652,10 +658,11 @@ ebml_element *EBML_FindNextElement(stream *Input, const ebml_parser_context *pCo
 
         if (Context->EndPosition!=INVALID_FILEPOS_T && Context->EndPosition <= CurrentPos)
         {
-            if (AllowDummyElt)
+            if (AllowDummyElt && Context->EndPosition != CurrentPos)
             {
+                /* add a dummy placeholder for the remaining of the parent */
                 int LevelChange = 0;
-			    ebml_element *Result = EBML_ElementCreateUsingContext(Input, PossibleIdNSize, PossibleID_Length, Context, &LevelChange, 0, 1);
+                ebml_element *Result = CreateElement(Input, PossibleIdNSize, PossibleID_Length, &EBML_ContextDummy, NULL);
 			    if (Result != NULL)
                 {
                     if (LevelChange > 0)
@@ -664,6 +671,7 @@ ebml_element *EBML_FindNextElement(stream *Input, const ebml_parser_context *pCo
 				    Result->ElementPosition = Result->SizePosition - PossibleID_Length;
 				    Result->DataSize = 0;
                     Result->SizeLength = (int8_t)(Context->EndPosition - Result->SizePosition);
+                    Result->EndPosition = Context->EndPosition;
 				    // place the file at the end of the element
 				    Stream_Seek(Input,Context->EndPosition,SEEK_SET);
 				    return Result;

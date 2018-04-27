@@ -1,5 +1,5 @@
 /*
- * $Id: ebmlnumber.c 831 2012-05-13 06:18:54Z robux4 $
+ * $Id$
  * Copyright (c) 2008-2010, Matroska (non-profit organisation)
  * All rights reserved.
  *
@@ -353,6 +353,7 @@ static ebml_integer *CopyInt(const ebml_integer *Element, const void *Cookie)
         Result->Base.ElementPosition = Element->Base.ElementPosition;
         Result->Base.SizeLength = Element->Base.SizeLength;
         Result->Base.SizePosition = Element->Base.SizePosition;
+        Result->Base.EndPosition = Element->Base.EndPosition;
         Result->Base.bNeedDataSizeUpdate = Element->Base.bNeedDataSizeUpdate;
     }
     return Result;
@@ -369,6 +370,7 @@ static ebml_float *CopyFloat(const ebml_float *Element, const void *Cookie)
         Result->Base.ElementPosition = Element->Base.ElementPosition;
         Result->Base.SizeLength = Element->Base.SizeLength;
         Result->Base.SizePosition = Element->Base.SizePosition;
+        Result->Base.EndPosition = Element->Base.EndPosition;
         Result->Base.bNeedDataSizeUpdate = Element->Base.bNeedDataSizeUpdate;
     }
     return Result;

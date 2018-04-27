@@ -1,5 +1,5 @@
 /*
- * $Id: ebmlvoid.c 642 2010-11-28 08:38:47Z robux4 $
+ * $Id$
  * Copyright (c) 2008-2010, Matroska (non-profit organisation)
  * All rights reserved.
  *
@@ -68,6 +68,7 @@ static ebml_element *Copy(const ebml_element *Element, const void *Cookie)
         Result->ElementPosition = Element->ElementPosition;
         Result->SizeLength = Element->SizeLength;
         Result->SizePosition = Element->SizePosition;
+        Result->EndPosition = Element->EndPosition;
         Result->bNeedDataSizeUpdate = Element->bNeedDataSizeUpdate;
     }
     return Result;

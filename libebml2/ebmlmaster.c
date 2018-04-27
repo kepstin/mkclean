@@ -1,5 +1,5 @@
 /*
- * $Id: ebmlmaster.c 749 2011-06-11 08:27:50Z robux4 $
+ * $Id$
  * Copyright (c) 2008-2010, Matroska (non-profit organisation)
  * All rights reserved.
  *
@@ -569,6 +569,7 @@ static ebml_element *Copy(const ebml_master *Element, const void *Cookie)
         Result->Base.ElementPosition = Element->Base.ElementPosition;
         Result->Base.SizeLength = Element->Base.SizeLength;
         Result->Base.SizePosition = Element->Base.SizePosition;
+        Result->Base.EndPosition = Element->Base.EndPosition;
         Result->Base.bNeedDataSizeUpdate = Element->Base.bNeedDataSizeUpdate;
         Result->CheckSumStatus = Element->CheckSumStatus;
         for (i=EBML_MasterChildren(Element);i;i=EBML_MasterNext(i))
@@ -597,6 +598,11 @@ static void AddChild(ebml_master* p,ebml_element* Child,ebml_element* Before)
     INHERITED(p,nodetree_vmt,EBML_MASTER_CLASS)->AddChild(p,Child,Before);
 }
 
+static bool_t ValidateSize(const ebml_element *p)
+{
+    return 1;
+}
+
 META_START(EBMLMaster_Class,EBML_MASTER_CLASS)
 META_CLASS(SIZE,sizeof(ebml_master))
 META_VMT(TYPE_FUNC,nodetree_vmt,AddChild,AddChild)
@@ -607,6 +613,7 @@ META_VMT(TYPE_FUNC,ebml_element_vmt,UpdateDataSize,UpdateDataSize)
 META_VMT(TYPE_FUNC,ebml_element_vmt,NeedsDataSizeUpdate,NeedsDataSizeUpdate)
 META_VMT(TYPE_FUNC,ebml_element_vmt,ReadData,ReadData)
 META_VMT(TYPE_FUNC,ebml_element_vmt,Copy,Copy)
+META_VMT(TYPE_FUNC, ebml_element_vmt, ValidateSize, ValidateSize)
 #if defined(CONFIG_EBML_WRITING)
 META_VMT(TYPE_FUNC,ebml_element_vmt,RenderData,RenderData)
 #endif
