@@ -13,7 +13,8 @@
 	dh $@
 
 override_dh_auto_configure:
-	./configure
+	make -C corec/tools/coremake
+	corec/tools/coremake/coremake $$(corec/tools/coremake/system_output.sh)
 
 override_dh_auto_install:
 	:
@@ -27,6 +28,6 @@ override_dh_auto_clean:
 	find . -name '*_project.h' -delete
 	rm -rf build release
 	rm -f corec/tools/coremake/corerc
-	rm -f coremake
+	rm -f corec/tools/coremake/coremake
 
 
